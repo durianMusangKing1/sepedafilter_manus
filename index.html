@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Analisis Sepeda Filter - Sistem Penyaringan Air Berkelanjutan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #3b82f6, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .metric-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .danger-card {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            border: 1px solid #fecaca;
+        }
+        .success-card {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 1px solid #bbf7d0;
+        }
+        .warning-card {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border: 1px solid #fde68a;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-7xl">
+
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <div class="inline-block p-6 rounded-2xl glass-effect mb-6">
+                <h1 class="text-4xl md:text-5xl font-bold gradient-text mb-4">
+                    Dashboard Analisis Sepeda Filter
+                </h1>
+                <p class="text-lg md:text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed">
+                    Sistem analisis komprehensif untuk evaluasi performa, efisiensi energi, dan kapabilitas produksi air 
+                    dari sistem penyaringan air berbasis sepeda statis dengan teknologi ultrafiltrasi dan reverse osmosis.
+                </p>
+            </div>
+            
+            <!-- Key Alert -->
+            <div class="bg-red-50 border-l-4 border-red-400 p-4 rounded-lg max-w-4xl mx-auto">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-red-700">
+                            <strong>Temuan Kritis:</strong> Sistem mengalami defisit daya ekstrem dengan rasio konsumsi 14.6x lebih besar dari produksi energi.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="space-y-12">
+
+            <!-- Section 1: Critical Metrics Overview -->
+            <section id="ringkasan" class="space-y-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold text-slate-900 mb-4">Analisis Keseimbangan Daya Sistem</h2>
+                    <p class="text-slate-600 max-w-3xl mx-auto text-lg">
+                        Evaluasi fundamental mengenai efisiensi energi sistem, menunjukkan perbandingan kritis antara 
+                        daya yang dihasilkan melalui generator sepeda dan kebutuhan energi operasional sistem.
+                    </p>
+                </div>
+
+                <!-- Power Metrics Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="metric-card p-6 rounded-xl card-hover">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wide">Daya Masuk</h3>
+                            <div class="w-3 h-3 bg-green-400 rounded-full pulse-animation"></div>
+                        </div>
+                        <p class="text-3xl font-bold text-green-600 mb-2">3.42 <span class="text-lg font-medium">W</span></p>
+                        <p class="text-sm text-slate-500">Maksimal dari generator</p>
+                    </div>
+
+                    <div class="danger-card p-6 rounded-xl card-hover">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-sm font-semibold text-red-700 uppercase tracking-wide">Daya Keluar</h3>
+                            <div class="w-3 h-3 bg-red-500 rounded-full pulse-animation"></div>
+                        </div>
+                        <p class="text-3xl font-bold text-red-600 mb-2">50 <span class="text-lg font-medium">W</span></p>
+                        <p class="text-sm text-red-600">Kebutuhan sistem</p>
+                    </div>
+
+                    <div class="warning-card p-6 rounded-xl card-hover">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-sm font-semibold text-amber-700 uppercase tracking-wide">Defisit Daya</h3>
+                            <div class="w-3 h-3 bg-amber-500 rounded-full pulse-animation"></div>
+                        </div>
+                        <p class="text-3xl font-bold text-amber-600 mb-2">46.58 <span class="text-lg font-medium">W</span></p>
+                        <p class="text-sm text-amber-600">Kekurangan energi</p>
+                    </div>
+
+                    <div class="metric-card p-6 rounded-xl card-hover">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wide">Efisiensi</h3>
+                            <div class="w-3 h-3 bg-blue-400 rounded-full pulse-animation"></div>
+                        </div>
+                        <p class="text-3xl font-bold text-blue-600 mb-2">6.84 <span class="text-lg font-medium">%</span></p>
+                        <p class="text-sm text-slate-500">Rasio daya in/out</p>
+                    </div>
+                </div>
+
+                <!-- Power Visualization -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+                        <h3 class="text-xl font-bold text-center mb-6">Perbandingan Daya (Watt)</h3>
+                        <div class="chart-container h-64">
+                            <canvas id="powerComparisonChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+                        <h3 class="text-xl font-bold text-center mb-6">Distribusi Konsumsi Energi</h3>
+                        <div class="chart-container h-64">
+                            <canvas id="energyDistributionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: Battery Analysis -->
+            <section id="analisis-aki" class="space-y-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold text-slate-900 mb-4">Analisis Performa Aki dan Runtime</h2>
+                    <p class="text-slate-600 max-w-3xl mx-auto text-lg">
+                        Evaluasi mendalam tentang kapasitas aki, waktu operasi, dan efisiensi charging system.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Battery Runtime Calculator -->
+                    <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+                        <h3 class="text-xl font-bold mb-6">Kalkulator Runtime Aki</h3>
+                        <div class="space-y-6">
+                            <div>
+                                <label for="batteryLevel" class="block mb-3 font-medium text-slate-700">
+                                    Kapasitas Aki: <span id="batteryLevelValue" class="font-bold text-blue-600">100%</span>
+                                </label>
+                                <input type="range" id="batteryLevel" min="0" max="100" value="100" 
+                                       class="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer slider">
+                                <div class="flex justify-between text-xs text-slate-500 mt-1">
+                                    <span>0%</span>
+                                    <span>25%</span>
+                                    <span>50%</span>
+                                    <span>75%</span>
+                                    <span>100%</span>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="text-center bg-blue-50 p-4 rounded-lg">
+                                    <p class="text-sm text-blue-600 font-medium">Waktu Operasi</p>
+                                    <p class="text-2xl font-bold text-blue-800 mt-1">
+                                        <span id="runtimeValue">66.7</span> <span class="text-lg">menit</span>
+                                    </p>
+                                </div>
+                                <div class="text-center bg-green-50 p-4 rounded-lg">
+                                    <p class="text-sm text-green-600 font-medium">Kapasitas Tersedia</p>
+                                    <p class="text-2xl font-bold text-green-800 mt-1">
+                                        <span id="capacityValue">240</span> <span class="text-lg">Wh</span>
+                                    </p>
+                                </div>
+                                <div class="text-center bg-purple-50 p-4 rounded-lg">
+                                    <p class="text-sm text-purple-600 font-medium">Konsumsi/Jam</p>
+                                    <p class="text-2xl font-bold text-purple-800 mt-1">216 <span class="text-lg">Wh</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charging Time Analysis -->
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+                        <h3 class="text-xl font-bold mb-6">Waktu Charging</h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                                <span class="font-medium text-slate-700">Ke 60%</span>
+                                <span class="font-bold text-slate-900">42.1 jam</span>
+                            </div>
+                            <div class="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                                <span class="font-medium text-slate-700">Ke 80%</span>
+                                <span class="font-bold text-slate-900">56.1 jam</span>
+                            </div>
+                            <div class="flex justify-between items-center p-3 bg-red-50 rounded-lg border border-red-200">
+                                <span class="font-medium text-red-700">Ke 100%</span>
+                                <span class="font-bold text-red-900">70.2 jam</span>
+                            </div>
+                            <div class="mt-4 p-3 bg-amber-50 rounded-lg border border-amber-200">
+                                <p class="text-xs text-amber-700">
+                                    <strong>Catatan:</strong> Waktu charging sangat tidak praktis untuk penggunaan harian.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 3: Water Production Analysis -->
+            <section id="analisis-air" class="space-y-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold text-slate-900 mb-4">Analisis Produksi dan Kebutuhan Air</h2>
+                    <p class="text-slate-600 max-w-3xl mx-auto text-lg">
+                        Evaluasi kapasitas produksi air sistem berdasarkan kebutuhan harian standar WHO dan penelitian internasional.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Water Requirements Calculator -->
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+                        <h3 class="text-xl font-bold mb-6">Kalkulator Kebutuhan Air</h3>
+                        <div class="space-y-6">
+                            <div>
+                                <label for="peopleCount" class="block mb-2 font-medium text-slate-700">Jumlah Orang</label>
+                                <input type="number" id="peopleCount" value="1" min="1" max="10" 
+                                       class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <div class="bg-blue-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-center">
+                                        <span class="font-medium text-blue-700">Mandi (2x/hari)</span>
+                                        <span class="font-bold text-blue-900"><span id="bathingWater">40</span> L</span>
+                                    </div>
+                                </div>
+                                <div class="bg-teal-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-center">
+                                        <span class="font-medium text-teal-700">Sanitasi</span>
+                                        <span class="font-bold text-teal-900"><span id="sanitationWater">15</span> L</span>
+                                    </div>
+                                </div>
+                                <div class="bg-cyan-50 p-4 rounded-lg">
+                                    <div class="flex justify-between items-center">
+                                        <span class="font-medium text-cyan-700">Air Minum</span>
+                                        <span class="font-bold text-cyan-900"><span id="drinkingWater">2.5</span> L</span>
+                                    </div>
+                                </div>
+                                <div class="bg-slate-100 p-4 rounded-lg border-2 border-slate-300">
+                                    <div class="flex justify-between items-center">
+                                        <span class="font-bold text-slate-700">Total Kebutuhan</span>
+                                        <span class="font-bold text-slate-900 text-lg"><span id="totalWater">57.5</span> L</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Production Analysis -->
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+                        <h3 class="text-xl font-bold mb-6">Analisis Produksi</h3>
+                        <div class="space-y-6">
+                            <!-- Flow Rates -->
+                            <div class="space-y-3">
+                                <h4 class="font-semibold text-slate-700">Laju Alir Sistem</h4>
+                                <div class="bg-blue-100 p-3 rounded-lg">
+                                    <div class="flex justify-between">
+                                        <span class="text-blue-700">Air Bersih (UF)</span>
+                                        <span class="font-bold text-blue-900">6.67 LPM</span>
+                                    </div>
+                                </div>
+                                <div class="bg-cyan-100 p-3 rounded-lg">
+                                    <div class="flex justify-between">
+                                        <span class="text-cyan-700">Air Minum (RO)</span>
+                                        <span class="font-bold text-cyan-900">0.40 LPM</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Production Time -->
+                            <div class="space-y-3">
+                                <h4 class="font-semibold text-slate-700">Waktu Produksi</h4>
+                                <div class="bg-green-50 p-3 rounded-lg">
+                                    <div class="flex justify-between">
+                                        <span class="text-green-700">Mandi + Sanitasi</span>
+                                        <span class="font-bold text-green-900"><span id="productionTimeBathing">8.25</span> menit</span>
+                                    </div>
+                                </div>
+                                <div class="bg-emerald-50 p-3 rounded-lg">
+                                    <div class="flex justify-between">
+                                        <span class="text-emerald-700">Air Minum</span>
+                                        <span class="font-bold text-emerald-900"><span id="productionTimeDrinking">6.25</span> menit</span>
+                                    </div>
+                                </div>
+                                <div class="bg-slate-100 p-3 rounded-lg border-2 border-slate-300">
+                                    <div class="flex justify-between">
+                                        <span class="font-bold text-slate-700">Total Waktu</span>
+                                        <span class="font-bold text-slate-900"><span id="totalProductionTime">14.5</span> menit</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Battery Usage -->
+                            <div class="bg-purple-50 p-4 rounded-lg border border-purple-200">
+                                <div class="text-center">
+                                    <p class="text-purple-700 font-medium">Konsumsi Aki</p>
+                                    <p class="text-2xl font-bold text-purple-900 mt-1">
+                                        <span id="batteryUsage">21.74</span>%
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 4: Detailed Charts -->
+            <section id="grafik-detail" class="space-y-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold text-slate-900 mb-4">Visualisasi Data Teknis</h2>
+                    <p class="text-slate-600 max-w-3xl mx-auto text-lg">
+                        Representasi visual dari data teknis sistem untuk analisis mendalam.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+                        <h3 class="text-xl font-bold text-center mb-6">Kurva Daya Charging vs Tegangan</h3>
+                        <div class="chart-container h-80">
+                            <canvas id="chargingCurveChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+                        <h3 class="text-xl font-bold text-center mb-6">Estimasi Waktu Charging</h3>
+                        <div class="chart-container h-80">
+                            <canvas id="chargingTimeChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 5: Conclusions and Recommendations -->
+            <section id="kesimpulan" class="space-y-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold text-slate-900 mb-4">Kesimpulan dan Rekomendasi</h2>
+                    <p class="text-slate-600 max-w-3xl mx-auto text-lg">
+                        Analisis komprehensif dan rekomendasi strategis untuk pengembangan sistem.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Key Findings -->
+                    <div class="bg-white p-8 rounded-xl shadow-lg border border-slate-200">
+                        <h3 class="text-xl font-bold mb-6 text-slate-900">Temuan Utama</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start space-x-3">
+                                <div class="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <span class="text-blue-600 font-bold text-sm">1</span>
+                                </div>
+                                <p class="text-slate-700"><strong>Runtime Terbatas:</strong> Aki 100% hanya mampu mengoperasikan sistem selama 66.7 menit (1.11 jam).</p>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <span class="text-red-600 font-bold text-sm">2</span>
+                                </div>
+                                <p class="text-slate-700"><strong>Defisit Daya Kritis:</strong> Sistem mengkonsumsi 14.6x lebih banyak daya daripada yang dapat dihasilkan generator.</p>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="w-6 h-6 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <span class="text-amber-600 font-bold text-sm">3</span>
+                                </div>
+                                <p class="text-slate-700"><strong>Charging Tidak Praktis:</strong> Membutuhkan 70.2 jam mengayuh non-stop untuk charging penuh.</p>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <span class="text-green-600 font-bold text-sm">4</span>
+                                </div>
+                                <p class="text-slate-700"><strong>Produksi Air Efisien:</strong> Dapat memenuhi kebutuhan air harian 1 orang hanya dalam 14.5 menit (21.74% aki).</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recommendations -->
+                    <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-8 rounded-xl border border-blue-200">
+                        <h3 class="text-xl font-bold mb-6 text-blue-900">Rekomendasi Strategis</h3>
+                        <div class="space-y-4">
+                            <div class="bg-white p-4 rounded-lg border border-blue-200">
+                                <h4 class="font-semibold text-blue-800 mb-2">Prioritas Utama: Upgrade Sistem Charging</h4>
+                                <p class="text-blue-700 text-sm">Implementasi panel surya atau generator mekanis dengan kapasitas minimal 50W untuk mencapai keseimbangan energi.</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg border border-blue-200">
+                                <h4 class="font-semibold text-blue-800 mb-2">Optimasi Konsumsi Daya</h4>
+                                <p class="text-blue-700 text-sm">Evaluasi komponen sistem untuk mengurangi konsumsi daya dari 50W ke target maksimal 10-15W.</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg border border-blue-200">
+                                <h4 class="font-semibold text-blue-800 mb-2">Upgrade Kapasitas Aki</h4>
+                                <p class="text-blue-700 text-sm">Pertimbangkan aki dengan kapasitas lebih besar (40-60Ah) untuk runtime yang lebih panjang.</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg border border-blue-200">
+                                <h4 class="font-semibold text-blue-800 mb-2">Sistem Hibrid</h4>
+                                <p class="text-blue-700 text-sm">Kombinasi generator sepeda, panel surya, dan grid connection sebagai backup power.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Performance Summary -->
+                <div class="bg-slate-900 text-white p-8 rounded-xl">
+                    <h3 class="text-xl font-bold mb-6 text-center">Ringkasan Performa Sistem</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                        <div>
+                            <p class="text-3xl font-bold text-blue-400">66.7</p>
+                            <p class="text-slate-300 text-sm">Menit runtime (100% aki)</p>
+                        </div>
+                        <div>
+                            <p class="text-3xl font-bold text-red-400">70.2</p>
+                            <p class="text-slate-300 text-sm">Jam untuk charging penuh</p>
+                        </div>
+                        <div>
+                            <p class="text-3xl font-bold text-green-400">14.5</p>
+                            <p class="text-slate-300 text-sm">Menit produksi air harian</p>
+                        </div>
+                        <div>
+                            <p class="text-3xl font-bold text-yellow-400">6.84</p>
+                            <p class="text-slate-300 text-sm">% efisiensi energi</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="text-center mt-16 pt-8 border-t border-slate-200">
+            <div class="glass-effect p-6 rounded-xl inline-block">
+                <p class="text-slate-600 mb-2">Dashboard Analisis Sepeda Filter</p>
+                <p class="text-sm text-slate-500">Sistem Penyaringan Air Berkelanjutan - Analisis Teknis Komprehensif</p>
+                <p class="text-xs text-slate-400 mt-2">&copy; 2024 - Dibuat untuk evaluasi dan optimasi sistem</p>
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // System Data (Updated with actual calculations)
+            const systemData = {
+                powerIn: 3.42,
+                powerOut: 50,
+                batteryCapacityWh: 240,
+                runtimeAt100Percent: 66.7, // minutes (calculated)
+                actualConsumptionWhPerHour: 216, // Wh/hour (calculated)
+                waterUF_LPM: 6.67,
+                waterRO_LPM: 0.40,
+                waterBathingPerPersonL: 40,
+                waterSanitationPerPersonL: 15,
+                waterDrinkingPerPersonL: 2.5,
+                chargingTimeToFull: 70.2, // hours
+                chargingTimeTo60: 42.1, // hours
+                chargingTimeTo80: 56.1, // hours
+            };
+
+            // Chart 1: Power Comparison Bar Chart
+            const powerComparisonCtx = document.getElementById('powerComparisonChart').getContext('2d');
+            new Chart(powerComparisonCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Daya Masuk\n(Generator)', 'Daya Keluar\n(Sistem)', 'Defisit\nDaya'],
+                    datasets: [{
+                        data: [systemData.powerIn, systemData.powerOut, systemData.powerOut - systemData.powerIn],
+                        backgroundColor: ['#10b981', '#ef4444', '#f59e0b'],
+                        borderColor: ['#059669', '#dc2626', '#d97706'],
+                        borderWidth: 2,
+                        borderRadius: 8,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.parsed.y.toFixed(2) + ' Watt';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Daya (Watt)' }
+                        }
+                    }
+                }
+            });
+
+            // Chart 2: Energy Distribution Pie Chart
+            const energyDistributionCtx = document.getElementById('energyDistributionChart').getContext('2d');
+            new Chart(energyDistributionCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Daya Tersedia', 'Defisit Daya'],
+                    datasets: [{
+                        data: [systemData.powerIn, systemData.powerOut - systemData.powerIn],
+                        backgroundColor: ['#3b82f6', '#ef4444'],
+                        borderColor: ['#2563eb', '#dc2626'],
+                        borderWidth: 2,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const percentage = ((context.parsed / (systemData.powerIn + systemData.powerOut - systemData.powerIn)) * 100).toFixed(1);
+                                    return context.label + ': ' + context.parsed.toFixed(2) + 'W (' + percentage + '%)';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Chart 3: Charging Curve
+            const chargingCurveCtx = document.getElementById('chargingCurveChart').getContext('2d');
+            const voltageData = [10, 11, 12, 13, 14, 15];
+            const powerData = [0.20, 0.49, 1.17, 1.76, 2.54, 3.42];
+            
+            new Chart(chargingCurveCtx, {
+                type: 'line',
+                data: {
+                    labels: voltageData,
+                    datasets: [{
+                        label: 'Daya Charging (W)',
+                        data: powerData,
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#3b82f6',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Daya: ' + context.parsed.y + ' Watt';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'Tegangan AC (V)' }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Daya Charging (W)' }
+                        }
+                    }
+                }
+            });
+
+            // Chart 4: Charging Time Bar Chart
+            const chargingTimeCtx = document.getElementById('chargingTimeChart').getContext('2d');
+            new Chart(chargingTimeCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Charge ke 60%', 'Charge ke 80%', 'Charge ke 100%'],
+                    datasets: [{
+                        data: [systemData.chargingTimeTo60, systemData.chargingTimeTo80, systemData.chargingTimeToFull],
+                        backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+                        borderColor: ['#059669', '#d97706', '#dc2626'],
+                        borderWidth: 2,
+                        borderRadius: 8,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.parsed.y.toFixed(1) + ' jam';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Waktu (Jam)' }
+                        }
+                    }
+                }
+            });
+
+            // Interactive Elements
+            
+            // Battery Level Slider
+            const batterySlider = document.getElementById('batteryLevel');
+            const batteryLevelValue = document.getElementById('batteryLevelValue');
+            const runtimeValue = document.getElementById('runtimeValue');
+            const capacityValue = document.getElementById('capacityValue');
+
+            batterySlider.addEventListener('input', function() {
+                const percentage = this.value;
+                const capacity = (percentage / 100) * systemData.batteryCapacityWh;
+                const runtime = (capacity / systemData.actualConsumptionWhPerHour) * 60; // minutes
+
+                batteryLevelValue.textContent = percentage + '%';
+                runtimeValue.textContent = runtime.toFixed(1);
+                capacityValue.textContent = capacity.toFixed(0);
+            });
+
+            // People Count Calculator
+            const peopleCountInput = document.getElementById('peopleCount');
+            const bathingWaterSpan = document.getElementById('bathingWater');
+            const sanitationWaterSpan = document.getElementById('sanitationWater');
+            const drinkingWaterSpan = document.getElementById('drinkingWater');
+            const totalWaterSpan = document.getElementById('totalWater');
+            const productionTimeBathingSpan = document.getElementById('productionTimeBathing');
+            const productionTimeDrinkingSpan = document.getElementById('productionTimeDrinking');
+            const totalProductionTimeSpan = document.getElementById('totalProductionTime');
+            const batteryUsageSpan = document.getElementById('batteryUsage');
+
+            function updateWaterCalculations() {
+                const people = parseInt(peopleCountInput.value) || 1;
+                
+                const bathingWater = systemData.waterBathingPerPersonL * people;
+                const sanitationWater = systemData.waterSanitationPerPersonL * people;
+                const drinkingWater = systemData.waterDrinkingPerPersonL * people;
+                const totalWater = bathingWater + sanitationWater + drinkingWater;
+                
+                const timeBathing = (bathingWater + sanitationWater) / systemData.waterUF_LPM;
+                const timeDrinking = drinkingWater / systemData.waterRO_LPM;
+                const totalTime = timeBathing + timeDrinking;
+                
+                const batteryUsage = (totalTime / systemData.runtimeAt100Percent) * 100;
+                
+                bathingWaterSpan.textContent = bathingWater.toFixed(1);
+                sanitationWaterSpan.textContent = sanitationWater.toFixed(1);
+                drinkingWaterSpan.textContent = drinkingWater.toFixed(1);
+                totalWaterSpan.textContent = totalWater.toFixed(1);
+                productionTimeBathingSpan.textContent = timeBathing.toFixed(2);
+                productionTimeDrinkingSpan.textContent = timeDrinking.toFixed(2);
+                totalProductionTimeSpan.textContent = totalTime.toFixed(1);
+                batteryUsageSpan.textContent = batteryUsage.toFixed(2);
+            }
+
+            peopleCountInput.addEventListener('input', updateWaterCalculations);
+            
+            // Initialize calculations
+            updateWaterCalculations();
+        });
+    </script>
+
+</body>
+</html>
+
